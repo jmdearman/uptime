@@ -3,7 +3,7 @@ import os
 import socket
 import time
 
-INTERVAL = 10
+INTERVAL = 30
 TIMEOUT = 5
 HOST = ('8.8.8.8', 53)
 LOGFILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'uptime_log.txt')
@@ -11,7 +11,7 @@ LOGFILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'uptime_log.
 
 def log(message):
     with open(LOGFILE, 'a') as f:
-        print(f'{datetime.datetime.now().isoformat()} {message}', file=f)
+        print('{} {}'.format(datetime.datetime.now().isoformat(), message), file=f)
 
 
 def connected():
@@ -25,7 +25,7 @@ def connected():
 
 def daemon():
     start_time = datetime.datetime.utcnow()
-    log(f'DAEMON started with test interval={INTERVAL} and timeout={TIMEOUT} against host={HOST}')
+    log('DAEMON started with test interval={} and timeout={} against host={}'.format(INTERVAL, TIMEOUT, HOST))
     disconnected_start_time = start_time
     up = True
     while True:
@@ -33,7 +33,7 @@ def daemon():
         if connected():
             if not up:
                 delta = current_time - disconnected_start_time
-                log(f'RECONNECTED after {delta.total_seconds():.0f} seconds')
+                log('RECONNECTED after {:.0f} seconds'.format(delta.total_seconds()))
                 up = True
         else:
             if up:
